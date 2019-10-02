@@ -190,11 +190,6 @@ fn build_grpc(cc: &mut Build, library: &str) {
     println!("cargo:rustc-link-lib=static=address_sorting");
     println!("cargo:rustc-link-lib=static={}", library);
 
-    if cfg!(feature = "secure") {
-        println!("cargo:rustc-link-lib=static=ssl");
-        println!("cargo:rustc-link-lib=static=crypto");
-    }
-
     cc.include("grpc/include");
 }
 
