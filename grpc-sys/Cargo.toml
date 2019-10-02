@@ -54,6 +54,7 @@ openssl-sys = { version = "0.9", optional = true, features = ["vendored"] }
 default = []
 secure = []
 openssl = ["secure"]
+openssl-static = ["openssl"]
 openssl-vendored = ["openssl", "openssl-sys"]
 no-omit-frame-pointer = []
 

@@ -191,7 +191,7 @@ fn build_grpc(cc: &mut Build, library: &str) {
     println!("cargo:rustc-link-lib=static={}", library);
 
     if cfg!(feature = "secure") {
-        if cfg!(feature = "openssl") && !cfg!(feature = "openssl-vendored") {
+        if cfg!(feature = "openssl") && !cfg!(feature = "openssl-vendored") && !cfg!(feature = "openssl-static"){
             println!("cargo:rustc-link-lib=ssl");
             println!("cargo:rustc-link-lib=crypto");
         } else {
