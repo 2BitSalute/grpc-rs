@@ -25,7 +25,8 @@ use cmake::Config;
 use pkg_config::{Config as PkgConfig, Library};
 use walkdir::WalkDir;
 
-const GRPC_VERSION: &'static str = "1.17.2";
+// The original insists on 1.17.2, but we're currently using 1.16.1 at the latest
+const GRPC_VERSION: &'static str = "1.16.1";
 
 fn probe_library(library: &str, cargo_metadata: bool) -> Library {
     match PkgConfig::new()
@@ -184,12 +185,6 @@ fn build_grpc(cc: &mut Build, library: &str) {
         }
     }
 
-    println!("cargo:rustc-link-lib=static={}", zlib);
-    println!("cargo:rustc-link-lib=static=cares");
-    println!("cargo:rustc-link-lib=static=gpr");
-    println!("cargo:rustc-link-lib=static=address_sorting");
-    println!("cargo:rustc-link-lib=static={}", library);
-
     cc.include("grpc/include");
 }
 
@@ -329,16 +324,6 @@ fn main() {
         // At lease win7
         cc.define("_WIN32_WINNT", Some("0x0700"));
         bind_config = bind_config.clang_arg("-D _WIN32_WINNT=0x0700");
-    }
-
-    if get_env("GRPCIO_SYS_USE_PKG_CONFIG").map_or(false, |s| s == "1") {
-        // Print cargo metadata.
-        let lib_core = probe_library(library, true);
-        for inc_path in lib_core.include_paths {
-            cc.include(inc_path);
-        }
-    } else {
-        build_grpc(&mut cc, library);
     }
 
     cc.cpp(true);
